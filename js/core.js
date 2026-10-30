@@ -39,7 +39,7 @@ window.Crypte = (function () {
     pal: { ink: '#0b0809', bone: '#dccfb6', blood: '#b3121d', ember: '#e8731c', mold: '#2d3b33' },
     grain: 0.14, vig: 0.62, flicker: 0.6, scan: false,
     trans: 'sang', vol: 0.8, sound: false,
-    scares: true, cursor: true, calm: false, intro: 'toujours', speed: 1
+    scares: true, cursor: true, calm: false, intro: 'toujours', speed: 1, unseal: false
   };
   const saved = C.store.get('crypte2.tweaks', {});
   C.T = Object.assign(JSON.parse(JSON.stringify(C.DEFAULT)), saved);

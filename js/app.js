@@ -140,6 +140,7 @@
       pageSound(name);
       Home.sync();
       setTimeout(Home.refreshThumbs, 60);
+      setTimeout(() => C.emit('seal:layout'), 80);
     },
     go(name) {
       if (Veil.isBusy() || VIEWS.indexOf(name) < 0) return;
@@ -185,6 +186,7 @@
     P.pal = Object.assign({}, t.pal);
     Sound.volume(t.vol);
     Home.applyCursor();
+    if (window.Seal) Seal.refresh();
     C.save();
   }
   const slider = (label, key, min, max, step) => '<div class="a-row"><label for="t-' + key + '">' + label + '</label><input id="t-' + key + '" type="range" data-t="' + key + '" min="' + min + '" max="' + max + '" step="' + step + '" value="' + T()[key] + '"></div>';
@@ -206,6 +208,7 @@
       slider('Vitesse du texte', 'speed', 0.6, 1.8, 0.1) +
       '<div class="a-row"><label>Cinématique d\'entrée</label><div class="seg" data-intro="1"><button data-iv="toujours" class="' + (t.intro === 'toujours' ? 'on' : '') + '">Toujours</button><button data-iv="une fois" class="' + (t.intro === 'une fois' ? 'on' : '') + '">Une fois</button></div></div>' +
       '<div class="a-btns"><button id="aReplay">Rejouer la cinématique</button></div>' +
+      '<h3>Cadenas des histoires</h3>' + check('Lever le cadenas (aperçu)', 'unseal') + '<div class="a-btns"><button id="aSeal">Tester l\'ouverture</button></div><p class="a-hint">Ouverture réelle : 31 octobre 2026 à minuit, heure du visiteur.</p>' +
       '<h3>Son</h3>' + check('Son activé', 'sound') + slider('Volume', 'vol', 0, 1, 0.05) +
       '<div class="a-btns">' + TEST.map((n) => '<button data-cue="' + n + '">' + n + '</button>').join('') + '</div><div style="height:.6rem"></div>' +
       '<div class="a-btns">' + SONGS.map(([k, l]) => '<button data-song="' + k + '">' + l + '</button>').join('') + '<button data-song="">Stop</button></div>' +
@@ -245,6 +248,7 @@
     if (b.dataset.test) { Veil.run(T().trans, () => {}); return; }
     if (b.dataset.iv) { T().intro = b.dataset.iv; apply(); $$('[data-iv]', panel).forEach((x) => x.classList.toggle('on', x === b)); return; }
     if (b.id === 'aReplay') { setOpen(false); Intro.replay(); return; }
+    if (b.id === 'aSeal') { setOpen(false); if (!T().sound) setSound(true); Seal.demo(); return; }
     if (b.dataset.cue) { if (!T().sound) setSound(true); Sound.cue(b.dataset.cue, { f: 196 }); return; }
     if (b.dataset.song != null) { if (!T().sound) setSound(true); Sound.music(b.dataset.song || null); return; }
     if (b.dataset.s) {
@@ -268,6 +272,7 @@
 
   /* ================= Démarrage ================= */
   Home.buildCards();
+  Seal.init();
   Home.init();
   renderPanel(); apply(); updHdr();
   const hash = (location.hash || '').slice(1);
