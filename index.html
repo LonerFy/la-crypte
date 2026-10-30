@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>La Crypte</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Halloween et au-delà : histoires d'horreur immersives et interactives, bestiaire et veillées du monde entier.">
+<meta name="theme-color" content="#0b0809">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=IM+Fell+Double+Pica:ital@0;1&family=IM+Fell+English:ital@0;1&family=Mrs+Saint+Delafield&family=Special+Elite&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/story.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <filter id="bleed" x="-4%" y="-10%" width="108%" height="120%">
+      <feTurbulence id="bleedTurb" type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="5" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="goo" x="-20%" y="-20%" width="140%" height="160%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="b"/>
+      <feColorMatrix in="b" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -8" result="g"/>
+      <feGaussianBlur in="g" stdDeviation="2.2" result="gb"/>
+      <feSpecularLighting in="gb" surfaceScale="5" specularConstant="1.1" specularExponent="28" lighting-color="#ffffff" result="sp">
+        <fePointLight x="-300" y="-400" z="260"/>
+      </feSpecularLighting>
+      <feComposite in="sp" in2="g" operator="in" result="spi"/>
+      <feComposite in="g" in2="spi" operator="arithmetic" k1="0" k2="1" k3="0.55" k4="0"/>
+    </filter>
+  </defs>
+</svg>
+
+<!-- CINÉMATIQUE D'ENTRÉE -->
+<div id="intro">
+  <canvas id="introCv"></canvas>
+  <div class="intro-ui" id="introUi">
+    <p class="kicker">31 octobre · La Crypte ouvre ses portes</p>
+    <h1 class="intro-h">Il est presque minuit.</h1>
+    <p class="intro-p">Quelque chose t'attend au fond du cimetière. Entre si tu l'oses.</p>
+    <div class="intro-btns">
+      <button class="btn primary" id="introSound">Entrer avec le son</button>
+      <button class="btn" id="introSilent">Entrer en silence</button>
+    </div>
+    <p class="intro-note">Casque conseillé · Contient des sursauts, réglables dans l'Atelier</p>
+  </div>
+  <div class="intro-title" id="introTitle" aria-hidden="true">La Crypte</div>
+  <button class="intro-skip" id="introSkip" hidden>Passer</button>
+</div>
+
+<div id="app">
+  <div id="tint"></div>
+
+  <header class="top">
+    <div class="in">
+      <button class="logo" data-go="accueil" aria-label="La Crypte, accueil">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V10a8 8 0 0 1 16 0v11M9 21v-7a3 3 0 0 1 6 0v7M2 21h20"/></svg>
+        La Crypte
+      </button>
+      <nav aria-label="Pages">
+        <button data-go="accueil">Accueil</button>
+        <button data-go="histoires">Histoires</button>
+        <button data-go="bestiaire">Bestiaire</button>
+        <button data-go="veillee">Veillée</button>
+      </nav>
+      <button class="snd" id="hdrSound" aria-pressed="false" title="Activer le son">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path class="spk" d="M4 9h4l5-4v14l-5-4H4z"/><path class="w1" d="M16.5 8.5a5 5 0 0 1 0 7"/><path class="w2" d="M19 6a8.5 8.5 0 0 1 0 12"/><path class="x" d="M16 9l6 6M22 9l-6 6"/></svg>
+        <span>Son</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ACCUEIL -->
+    <section class="view" id="v-accueil">
+      <div class="hero" id="hero">
+        <canvas id="heroCv" aria-hidden="true"></canvas>
+        <div class="hero-shade" aria-hidden="true"></div>
+        <div class="in hero-copy">
+          <p class="kicker rise" style="--i:0">Archives de l'effroi · Halloween 2026</p>
+          <div class="title-wrap rise" style="--i:1">
+            <h1 class="title" id="heroTitle">La Crypte</h1>
+            <div class="drips" id="drips" aria-hidden="true"></div>
+          </div>
+          <p class="lead rise" style="--i:2">Huit histoires cultes où tu entres pour de vrai. Des créatures du monde entier. Et une nuit qui approche.</p>
+          <div class="count rise" style="--i:3" id="count">
+            <span class="lbl" id="countLbl">La nuit d'Halloween dans</span>
+            <span class="u"><b id="cD">--</b><small>jours</small></span>
+            <span class="u"><b id="cH">--</b><small>heures</small></span>
+            <span class="u"><b id="cM">--</b><small>min</small></span>
+            <span class="u"><b id="cS">--</b><small>sec</small></span>
+          </div>
+          <div class="cta rise" style="--i:4">
+            <button class="btn primary" data-go="histoires">Descendre aux archives</button>
+            <button class="btn" id="trickTop">Bonbon ou sort ?</button>
+          </div>
+        </div>
+        <p class="hero-hint" id="heroHint">Allume les cinq citrouilles. Promène ta lumière dans les arbres.</p>
+      </div>
+
+      <section class="strip">
+        <div class="in strip-head">
+          <div>
+            <p class="kicker">Les dossiers</p>
+            <h2 class="h2">Choisis ton cauchemar</h2>
+          </div>
+          <button class="btn ghost" data-go="histoires">Les 8 histoires →</button>
+        </div>
+        <div class="strip-row" id="homeStories"></div>
+      </section>
+
+      <section class="in tot" id="tot">
+        <div class="tot-art" aria-hidden="true">
+          <svg viewBox="0 0 120 120"><path class="tot-stem" d="M58 22c2-8 8-12 14-12-5 4-7 8-7 13"/><ellipse class="tot-l" cx="34" cy="68" rx="26" ry="36"/><ellipse class="tot-l" cx="86" cy="68" rx="26" ry="36"/><ellipse class="tot-c" cx="60" cy="68" rx="30" ry="40"/><path class="tot-face" d="M38 56l14 6-12 6zM82 56l-14 6 12 6zM56 72h8l-4 6zM36 84l8 6 6-5 5 6 5-6 5 6 5-6 6 5 8-6-6 14-8 4-6-5-5 6-5-6-5 6-6-5-8 5z"/></svg>
+        </div>
+        <div class="tot-body">
+          <p class="kicker">Tradition du 31</p>
+          <h2 class="h2">Bonbon ou sort ?</h2>
+          <p>Frappe à la porte de la Crypte. Une chance sur deux de repartir les poches pleines.</p>
+          <button class="btn primary" id="trick">Frapper à la porte</button>
+          <p class="tot-out" id="trickOut" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <section class="in plans">
+        <button class="plan" data-go="bestiaire">
+          <span class="p-k">Folklore · 7 créatures</span>
+          <span class="p-t">Bestiaire</span>
+          <span class="p-a" aria-hidden="true">→</span>
+          <span class="p-d">De l'Ankou breton au Zangbeto du Bénin : écoute ce qui rôde, ce qui veille, ce qui pleure au bord de l'eau.</span>
+        </button>
+        <button class="plan" data-go="veillee">
+          <span class="p-k">Calendrier · toute l'année</span>
+          <span class="p-t">La Veillée</span>
+          <span class="p-a" aria-hidden="true">→</span>
+          <span class="p-d">Samain, Toussaint, Día de Muertos, Obon, Egungun. Allume une bougie pour chacune.</span>
+        </button>
+      </section>
+    </section>
+
+    <!-- HISTOIRES -->
+    <section class="view" id="v-histoires" hidden>
+      <div class="in">
+        <div class="v-head">
+          <p class="kicker rise" style="--i:0">Les dossiers</p>
+          <h1 class="title rise" style="--i:1">Histoires cultes</h1>
+          <p class="lead rise" style="--i:2">Choisis un dossier. Le décor change, la lumière tombe, et c'est toi qui tiens la lanterne. Chaque histoire dure entre 6 et 10 minutes. Casque conseillé.</p>
+        </div>
+        <div class="grid rise" style="--i:3" id="storyGrid"></div>
+        <p class="note-pd">Adaptations libres en français d'œuvres du domaine public, et une légende urbaine. Tous les sons sont synthétisés dans le navigateur.</p>
+      </div>
+    </section>
+
+    <!-- BESTIAIRE -->
+    <section class="view" id="v-bestiaire" hidden>
+      <div class="in">
+        <div class="v-head">
+          <p class="kicker rise" style="--i:0">Folklore du monde</p>
+          <h1 class="title rise" style="--i:1">Bestiaire</h1>
+          <p class="lead rise" style="--i:2">Sept présences qui ont fait baisser la voix des conteurs. Écoute-les. Toutes ne veulent pas te faire du mal.</p>
+        </div>
+        <div class="beasts rise" style="--i:3" id="beasts"></div>
+      </div>
+    </section>
+
+    <!-- VEILLÉE -->
+    <section class="view" id="v-veillee" hidden>
+      <div class="in">
+        <div class="v-head">
+          <p class="kicker rise" style="--i:0">L'année sombre</p>
+          <h1 class="title rise" style="--i:1">La Veillée</h1>
+          <p class="lead rise" style="--i:2">Presque toutes les cultures ont une nuit où la frontière s'amincit. Allume une bougie pour chacune.</p>
+        </div>
+        <ul class="year rise" style="--i:3" id="year"></ul>
+        <div class="why rise" style="--i:4">
+          <h2>Pourquoi une citrouille ?</h2>
+          <p>En Irlande, on creusait des navets pour y glisser une braise, en souvenir de Jack, condamné à errer entre ciel et enfer avec sa lanterne. Les migrants irlandais ont trouvé des citrouilles en Amérique, plus grosses et plus faciles à creuser. Le visage grimaçant devait chasser les âmes errantes.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="in">
+      <span>La Crypte · prototype v0.2</span>
+      <span>Conception AMOUSSOU-GUENOU Donald</span>
+    </div>
+  </footer>
+</div>
+
+<!-- LECTEUR D'HISTOIRE -->
+<div id="story" hidden>
+  <canvas id="scene"></canvas>
+  <div class="s-bars" aria-hidden="true"><i></i><i></i></div>
+  <div class="s-fade" id="sFade"></div>
+  <div class="s-hud">
+    <button id="sExit">Quitter</button>
+    <div class="s-chap"><span id="sChapT"></span><div class="s-prog" id="sProg" aria-hidden="true"></div></div>
+    <button id="sSound" aria-pressed="false">Son : off</button>
+  </div>
+  <div class="s-chapcard" id="sChap" hidden><span class="n"></span><span class="t"></span></div>
+  <div class="s-layer" id="sLayer">
+    <div class="s-narr" id="sNarr" hidden><p aria-live="polite"></p></div>
+    <div class="s-say" id="sSay" hidden><span class="who"></span><p aria-live="polite"></p></div>
+    <div class="s-journal" id="sJournal" hidden><span class="who"></span><span class="date"></span><p aria-live="polite"></p></div>
+    <div class="s-news" id="sNews" hidden><span class="mast"></span><span class="dl"></span><h3></h3><p aria-live="polite"></p></div>
+    <div class="s-big" id="sBig" hidden><p aria-live="polite"></p></div>
+    <div class="s-whisper" id="sWhisper" aria-hidden="true"></div>
+    <div class="s-caption" id="sCaption" hidden></div>
+    <span class="s-next" id="sNext">Toucher pour continuer</span>
+  </div>
+  <div class="s-act" id="sAct" hidden></div>
+  <div class="s-card" id="sIntro" hidden>
+    <p class="kicker" id="iKicker"></p>
+    <h2 class="title" id="iTitle"></h2>
+    <p class="by" id="iBy"></p>
+    <p class="adv" id="iAdv"></p>
+    <div class="badges" id="iBadges"></div>
+    <div class="btns">
+      <button class="btn primary" id="iSound">Entrer avec le son</button>
+      <button class="btn" id="iSilent">Entrer en silence</button>
+    </div>
+  </div>
+  <div class="s-card" id="sOutro" hidden>
+    <p class="kicker">Fin du dossier</p>
+    <h2 class="title" id="oTitle"></h2>
+    <p class="adv" id="oLine"></p>
+    <div class="btns">
+      <button class="btn primary" id="oNext">Dossier suivant</button>
+      <button class="btn" id="oAgain">Rejouer</button>
+      <button class="btn" id="oBack">Retour aux dossiers</button>
+    </div>
+  </div>
+</div>
+
+<!-- ATELIER -->
+<button id="atelierBtn" aria-expanded="false" aria-controls="atelier">Atelier</button>
+<aside id="atelier" aria-label="Atelier de réglages"></aside>
+
+<!-- Calques d'effets -->
+<canvas id="fxCv" aria-hidden="true"></canvas>
+<canvas id="scareCv" aria-hidden="true"></canvas>
+<div class="fx" id="grain"></div>
+<div class="fx" id="vig"></div>
+<div class="fx" id="scan"></div>
+<div class="fx" id="blink"></div>
+<div id="veil" aria-hidden="true"><canvas id="veilCv"></canvas><div id="veilDom"></div></div>
+
+<script src="js/core.js"></script>
+<script src="js/paint.js"></script>
+<script src="js/stage.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/scenes-1.js"></script>
+<script src="js/scenes-2.js"></script>
+<script src="js/stories-1.js"></script>
+<script src="js/stories-2.js"></script>
+<script src="js/veil.js"></script>
+<script src="js/theatre.js"></script>
+<script src="js/intro.js"></script>
+<script src="js/home.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
