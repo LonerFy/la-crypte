@@ -698,9 +698,13 @@
       c.fillStyle = '#2a2e38'; c.beginPath(); c.moveTo(500, v.y1 + 10); c.quadraticCurveTo(700, 700, 760, 640); c.lineTo(860, 640); c.quadraticCurveTo(900, 720, 1150, v.y1 + 10); c.fill();
       v = S.layer(1);
       const ph = t * 2.2;
-      P.horse(c, 430, 690, 0.62, ph, '#020203'); P.horse(c, 470, 676, 0.58, ph + 1.3, '#020203');
-      P.horse(c, 560, 690, 0.62, ph + 0.6, '#020203'); P.horse(c, 600, 676, 0.58, ph + 2, '#020203');
-      c.strokeStyle = '#020203'; c.lineWidth = 3; c.beginPath(); c.moveTo(620, 640); c.lineTo(690, 620); c.stroke();
+      [[470, 676, 0.58, 1.3], [600, 676, 0.58, 2], [430, 690, 0.62, 0], [560, 690, 0.62, 0.6]].forEach(([hx, hy, hs, hp]) => {
+        P.horse(c, hx - 2, hy - 3, hs, ph + hp, '#56627e', { flip: true });
+        P.horse(c, hx, hy, hs, ph + hp, '#0c0e14', { flip: true });
+      });
+      c.strokeStyle = '#020203'; c.lineWidth = 3; c.beginPath();
+      c.moveTo(692, 628); c.lineTo(596, 640); c.moveTo(692, 628); c.lineTo(466, 638); c.moveTo(696, 600); c.quadraticCurveTo(560, 600, 400, 612); c.stroke();
+      c.lineWidth = 5; c.beginPath(); c.moveTo(694, 640); c.lineTo(588, 652); c.stroke();
       c.fillStyle = '#030304'; c.fillRect(690, 560, 170, 80); c.beginPath(); c.moveTo(680, 560); c.quadraticCurveTo(775, 530, 870, 560); c.fill();
       H.wheel(c, 720, 670, 34, t * 1.4, '#030304'); H.wheel(c, 830, 670, 40, t * 1.2, '#030304');
       P.fig(c, 700, 570, 120, 'man', { hat: true, col: '#020203', raise: 20 });
@@ -718,7 +722,7 @@
       }
       P.parts(c, st, 'snow', 'snow', 90, v, dt, t, { col: '#e8eef8', wind: 0.04 });
     },
-    lights(st) { return [{ x: 777, y: 590, r: 330, i: 0.85, c: '#ffcc77', g: 0.2 }, { x: 1260, y: 150, r: 900, i: 0.4, c: '#c8d4ec', d: 0.05 }, { x: 800, y: 700, r: 900, i: st.flames * 0.3, c: '#4a8aff' }]; }
+    lights(st) { return [{ x: 777, y: 590, r: 330, i: 0.85, c: '#ffcc77', g: 0.2 }, { x: 520, y: 640, r: 260, i: 0.5, c: '#9fb0d0', g: 0.05 }, { x: 1260, y: 150, r: 900, i: 0.4, c: '#c8d4ec', d: 0.05 }, { x: 800, y: 700, r: 900, i: st.flames * 0.3, c: '#4a8aff' }]; }
   };
 
   SC['dr-castle'] = {
